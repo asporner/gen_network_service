@@ -1,0 +1,22 @@
+HOW-TO configure reverse proxy in Apache24
+
+
+First locate your httpd.conf file.   In the section where the modules are
+loaded make sure that these lines are present and not commented out.
+
+    LoadModule proxy_module libexec/apache24/mod_proxy.so
+    LoadModule proxy_connect_module libexec/apache24/mod_proxy_connect.so
+    LoadModule proxy_http_module libexec/apache24/mod_proxy_http.so
+    LoadModule rewrite_module libexec/apache24/mod_rewrite.so
+
+Next in your document configuration (in this case we are using a vhost) 
+insert the following lines:
+
+    <VirtualHost *:80>
+        ProxyPreserveHost On
+        ProxyPass "/api/" "http://localhost:4444/"
+        ProxyPassReverse "/api/" "http://localhost:4444/"
+    </VirtualHost>
+
+
+Restart your web service...
